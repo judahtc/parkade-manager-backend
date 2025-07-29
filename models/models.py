@@ -15,5 +15,5 @@ class Car(Base):
     registered_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships
-    company = relationship("Company", back_populates="cars")
-    payments = relationship("Payment", back_populates="car")
+    # company = relationship("Company", back_populates="cars")
+    # payments = relationship("Payment", back_populates="car")
