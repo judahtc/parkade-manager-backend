@@ -7,111 +7,111 @@ from sqlalchemy.orm import Session
 from typing import List, Union
 
 
-router = APIRouter(prefix="/visitors", tags=["drivers"])
+router = APIRouter(prefix="/drivers", tags=["drivers"])
 
 
 @router.get("/")
-def get_visitors(db:Session= Depends(get_db)):
-    visitors=db.query(models.Visitor).all()
-    return visitors
+def get_drivers(db:Session= Depends(get_db)):
+    drivers=db.query(models.Driver).all()
+    return drivers
 
-# Create Visitor
+# Create Driver
 
 
-@router.post("/", response_model=schemas.VisitorResponse)
-def create_visitor(visitor: schemas.VisitorCreate, db: Session = Depends(get_db)):
-    db_visitor = db.query(models.Visitor).filter(
-        models.Visitor.national_id == visitor.national_id).first()
-    if db_visitor:
+@router.post("/", response_model=schemas.DriverResponse)
+def create_driver(driver: schemas.DriverCreate, db: Session = Depends(get_db)):
+    db_driver = db.query(models.Driver).filter(
+        models.Driver.national_id == driver.national_id).first()
+    if db_driver:
         raise HTTPException(
             status_code=400, detail="National ID already registered")
-    new_visitor = models.Visitor(**visitor.dict())
-    db.add(new_visitor)
+    new_driver = models.Driver(**driver.dict())
+    db.add(new_driver)
     db.commit()
-    db.refresh(new_visitor)
-    return new_visitor
+    db.refresh(new_driver)
+    return new_driver
 
-# Get All Visitors
-
-
-@router.get("/", response_model=List[schemas.VisitorResponse])
-def read_visitors(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    visitors = db.query(models.Visitor).all()
-    return visitors
-
-# Get Single Visitor by ID
+# Get All Drivers
 
 
-@router.get("/{visitor_id}", response_model=schemas.VisitorResponse)
-def read_visitor(visitor_id: int, db: Session = Depends(get_db)):
-    visitor = db.query(models.Visitor).filter(
-        models.Visitor.id == visitor_id).first()
-    if not visitor:
-        raise HTTPException(status_code=404, detail="Visitor not found")
-    return visitor
+@router.get("/", response_model=List[schemas.DriverResponse])
+def read_drivers(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    drivers = db.query(models.Driver).all()
+    return drivers
 
-# Query Visitor by National ID
+# Get Single Driver by ID
 
 
-@router.get("/by-national-id/{national_id}", response_model=schemas.VisitorResponse)
-def get_visitor_by_national_id(national_id: str, db: Session = Depends(get_db)):
-    visitor = db.query(models.Visitor).filter(
-        models.Visitor.national_id == national_id).first()
-    if not visitor:
+@router.get("/{driver_id}", response_model=schemas.DriverResponse)
+def read_driver(driver_id: int, db: Session = Depends(get_db)):
+    driver = db.query(models.Driver).filter(
+        models.Driver.id == driver_id).first()
+    if not driver:
+        raise HTTPException(status_code=404, detail="Driver not found")
+    return driver
+
+# Query Driver by National ID
+
+
+@router.get("/by-national-id/{national_id}", response_model=schemas.DriverResponse)
+def get_driver_by_national_id(national_id: str, db: Session = Depends(get_db)):
+    driver = db.query(models.Driver).filter(
+        models.Driver.national_id == national_id).first()
+    if not driver:
         raise HTTPException(
-            status_code=404, detail="Visitor not found with the given National ID")
-    return visitor
+            status_code=404, detail="Driver not found with the given National ID")
+    return driver
 
-# Update Visitor
+# Update Driver
 
 
-@router.put("/{visitor_id}", response_model=schemas.VisitorResponse)
-def update_visitor(visitor_id: int, visitor_update: schemas.VisitorUpdate, db: Session = Depends(get_db)):
-    visitor = db.query(models.Visitor).filter(
-        models.Visitor.id == visitor_id).first()
-    if not visitor:
-        raise HTTPException(status_code=404, detail="Visitor not found")
-    for key, value in visitor_update.dict(exclude_unset=True).items():
-        setattr(visitor, key, value)
+@router.put("/{driver_id}", response_model=schemas.DriverResponse)
+def update_driver(driver_id: int, driver_update: schemas.DriverUpdate, db: Session = Depends(get_db)):
+    driver = db.query(models.Driver).filter(
+        models.Driver.id == driver_id).first()
+    if not driver:
+        raise HTTPException(status_code=404, detail="Driver not found")
+    for key, value in driver_update.dict(exclude_unset=True).items():
+        setattr(driver, key, value)
     db.commit()
-    db.refresh(visitor)
-    return visitor
+    db.refresh(driver)
+    return driver
 
-# Delete Visitor
+# Delete Driver
 
 
-@router.delete("/{visitor_id}", response_model=dict)
-def delete_visitor(visitor_id: int, db: Session = Depends(get_db)):
-    visitor = db.query(models.Visitor).filter(
-        models.Visitor.id == visitor_id).first()
-    if not visitor:
-        raise HTTPException(status_code=404, detail="Visitor not found")
-    db.delete(visitor)
+@router.delete("/{driver_id}", response_model=dict)
+def delete_driver(driver_id: int, db: Session = Depends(get_db)):
+    driver = db.query(models.Driver).filter(
+        models.Driver.id == driver_id).first()
+    if not driver:
+        raise HTTPException(status_code=404, detail="Driver not found")
+    db.delete(driver)
     db.commit()
-    return {"detail": "Visitor deleted successfully"}
+    return {"detail": "Driver deleted successfully"}
 
 
-@router.put("/{visitor_id}", response_model=dict)
-def check_in_visitor(visitor_id: int, db: Session = Depends(get_db)):
-    visitor = db.query(models.Visitor).filter(
-        models.Visitor.id == visitor_id).first()
-    if not visitor:
-        raise HTTPException(status_code=404, detail="Visitor not found")
+@router.put("/{driver_id}/check-in", response_model=dict)
+def check_in_driver(driver_id: int, db: Session = Depends(get_db)):
+    driver = db.query(models.Driver).filter(
+        models.Driver.id == driver_id).first()
+    if not driver:
+        raise HTTPException(status_code=404, detail="Driver not found")
     
 
     # CHECK IN CODE
     db.commit()
-    return {"detail": "Visitor checked in successfully"}
-@router.put("/{visitor_id}/re_check_in", response_model=dict)
-def re_check_in_visitor(visitor_id: int, db: Session = Depends(get_db)):
-    visitor = db.query(models.Visitor).filter(
-        models.Visitor.id == visitor_id).first()
-    if not visitor:
-        raise HTTPException(status_code=404, detail="Visitor not found")
+    return {"detail": "Driver checked in successfully"}
+@router.put("/{driver_id}/re-check-in", response_model=dict)
+def re_check_in_driver(driver_id: int, db: Session = Depends(get_db)):
+    driver = db.query(models.Driver).filter(
+        models.Driver.id == driver_id).first()
+    if not driver:
+        raise HTTPException(status_code=404, detail="Driver not found")
     
 
     # CHECK IN CODE
     db.commit()
-    return {"detail": "Visitor checked in successfully"}
+    return {"detail": "Driver checked in successfully"}
 
 
