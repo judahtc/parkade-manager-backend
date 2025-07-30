@@ -72,3 +72,29 @@ class PaymentResponse(PaymentBase):
 
     class Config:
         orm_mode = True
+
+
+class TenantBase(BaseModel):
+    name: str
+    contact_email: EmailStr
+    address: Optional[str] = None
+
+
+
+class TenantCreate(TenantBase):
+    pass
+
+
+class TenantUpdate(BaseModel):
+    name: Optional[str] = None
+    contact_email: Optional[EmailStr] = None
+    address: Optional[str] = None
+
+
+
+class TenantResponse(TenantBase):
+    id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
