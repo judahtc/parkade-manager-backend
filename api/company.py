@@ -7,7 +7,7 @@ from typing import List
 
 router = APIRouter(prefix="/companies", tags=["companies"])
 
-@router.post("/", response_model=schemas.CompanyResponse)
+@router.post("", response_model=schemas.CompanyResponse)
 def create_company(company: schemas.CompanyCreate, db: Session = Depends(get_db)):
     existing = db.query(models.Company).filter(models.Company.email == company.email).first()
     if existing:
@@ -18,7 +18,7 @@ def create_company(company: schemas.CompanyCreate, db: Session = Depends(get_db)
     db.refresh(new_company)
     return new_company
 
-@router.get("/", response_model=List[schemas.CompanyResponse])
+@router.get("", response_model=List[schemas.CompanyResponse])
 def get_companies(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     companies = db.query(models.Company).offset(skip).limit(limit).all()
     return companies
