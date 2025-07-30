@@ -1,11 +1,12 @@
 from typing import Union
-from api import vehicle,company,payment
+
 
 from fastapi import FastAPI, HTTPException
 import httpx
 
 from models import models
 from db.database import engine
+from api import vehicle,company,payment,users,tenants
 from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI(
     title="Parkade Manager System",
@@ -43,6 +44,8 @@ def read_root():
 
 
 
+app.include_router(tenants.router)
+app.include_router(users.router)
 app.include_router(vehicle.router)
 app.include_router(company.router)
 app.include_router(payment.router)
