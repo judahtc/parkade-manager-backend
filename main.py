@@ -1,5 +1,5 @@
 from typing import Union
-# from api import patients, visitors, admins, hospital, security
+from api import vehicle
 
 from fastapi import FastAPI, HTTPException
 import httpx
@@ -26,7 +26,7 @@ def read_root():
 
 
 
-# app.include_router(security.router)
+app.include_router(vehicle.router)
 # app.include_router(hospital.router)
 # app.include_router(admins.router)
 # app.include_router(patients.router)
