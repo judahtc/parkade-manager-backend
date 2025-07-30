@@ -98,3 +98,32 @@ class TenantResponse(TenantBase):
 
     class Config:
         orm_mode = True
+
+
+class UserBase(BaseModel):
+    username: str
+    full_name: str
+    email: EmailStr
+    role: str  # E.g., "admin", "security", etc.
+
+
+class UserCreate(UserBase):
+    password: str
+    tenant_id: int
+
+
+class UserUpdate(BaseModel):
+    full_name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    role: Optional[str] = None
+    is_active: Optional[bool] = None
+
+
+class UserResponse(UserBase):
+    id: int
+    is_active: bool
+    created_at: datetime
+    tenant_id: int
+
+    class Config:
+        orm_mode = True
