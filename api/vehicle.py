@@ -8,7 +8,7 @@ from typing import List
 router = APIRouter(prefix="/cars", tags=["cars"])
 
 # Get all cars
-@router.get("/", response_model=List[schemas.CarResponse])
+@router.get("", response_model=List[schemas.CarResponse])
 def get_all_cars(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     cars = db.query(models.Car).offset(skip).limit(limit).all()
     return cars
@@ -22,7 +22,7 @@ def get_car(car_id: int, db: Session = Depends(get_db)):
     return car
 
 # Create a new car
-@router.post("/", response_model=schemas.CarResponse)
+@router.post("", response_model=schemas.CarResponse)
 def create_car(car: schemas.CarCreate, db: Session = Depends(get_db)):
     existing_car = db.query(models.Car).filter(
         models.Car.plate_number == car.plate_number).first()
