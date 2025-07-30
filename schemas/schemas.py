@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, condecimal
 from typing import Optional
 from datetime import datetime
 
@@ -50,6 +50,25 @@ class CompanyResponse(CompanyBase):
     id: int
     created_at: datetime
 
+
+    class Config:
+        orm_mode = True
+
+
+class PaymentBase(BaseModel):
+    car_id: int
+    amount: condecimal(max_digits=10, decimal_places=2)
+    payment_date: Optional[datetime] = None
+
+class PaymentCreate(PaymentBase):
+    pass
+
+class PaymentUpdate(PaymentBase):
+    pass
+
+class PaymentResponse(PaymentBase):
+    id: int
+    payment_date: datetime  # ensure it's always included in responses
 
     class Config:
         orm_mode = True
