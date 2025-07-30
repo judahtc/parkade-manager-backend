@@ -7,7 +7,24 @@ import httpx
 from models import models
 from db.database import engine
 from fastapi.middleware.cors import CORSMiddleware
-app = FastAPI(title="Hospital Patient Visit Manager", description="The Hospital Security Application is a system designed to verify and manage authorized visitors for patients. The system will be run by Admins and Security personnel. Security will verify the visitor’s identity using their National ID and check against the patient's pre-authorized visitor list.", version="1.0.0",)
+app = FastAPI(
+    title="Parkade Manager System",
+    description="""
+The Parkade Manager System is a secure and scalable platform for managing access to parking facilities. 
+It supports verification and tracking of authorized vehicles, companies, visitors, and users across multiple tenants.
+
+Core functionalities include:
+- Vehicle registration and verification using license plate numbers
+- Company onboarding and vehicle association
+- Payment tracking for parking and related services
+- Role-based access for admins, tenant managers, and security personnel
+- Multi-tenant architecture to isolate and manage organizational data
+
+The system enhances security, accountability, and operational efficiency for parkade facilities.
+""",
+    version="1.0.0",
+)
+
 origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
