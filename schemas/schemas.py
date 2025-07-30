@@ -32,3 +32,24 @@ class LoginSchema(BaseModel):
     username: Optional[str] = None
     email: Optional[str] = None
     password: str
+
+
+class CompanyBase(BaseModel):
+    name: str
+    email: EmailStr
+    address: Optional[str] = None
+    phone: Optional[str] = None
+
+class CompanyCreate(CompanyBase):
+    pass
+
+class CompanyUpdate(CompanyBase):
+    pass
+
+class CompanyResponse(CompanyBase):
+    id: int
+    created_at: datetime
+
+
+    class Config:
+        orm_mode = True
