@@ -27,7 +27,5 @@ def read_root():
 
 
 app.include_router(vehicle.router)
-# app.include_router(hospital.router)
-# app.include_router(admins.router)
-# app.include_router(patients.router)
-# app.include_router(visitors.router)
+# app.include_router(company.router)
+
