@@ -7,7 +7,7 @@ from typing import List
 
 router = APIRouter(prefix="/payments", tags=["payments"])
 
-@router.post("/", response_model=schemas.PaymentResponse)
+@router.post("", response_model=schemas.PaymentResponse)
 def create_payment(payment: schemas.PaymentCreate, db: Session = Depends(get_db)):
     car = db.query(models.Car).filter(models.Car.id == payment.car_id).first()
     if not car:
@@ -18,7 +18,7 @@ def create_payment(payment: schemas.PaymentCreate, db: Session = Depends(get_db)
     db.refresh(new_payment)
     return new_payment
 
-@router.get("/", response_model=List[schemas.PaymentResponse])
+@router.get("", response_model=List[schemas.PaymentResponse])
 def get_all_payments(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     return db.query(models.Payment).offset(skip).limit(limit).all()
 
