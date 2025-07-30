@@ -27,10 +27,12 @@ class Company(Base):
     email = Column(String, nullable=False)
     address = Column(String, nullable=True)
     phone = Column(String, nullable=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships
     cars = relationship("Car", back_populates="company")
+    tenant=relationship("Tenant", back_populates="companies")
 
 class Payment(Base):
     __tablename__ = "payments"
@@ -45,3 +47,16 @@ class Payment(Base):
     # Relationship
     car = relationship("Car", back_populates="payments")
  
+
+class Tenant(Base):
+    __tablename__ = "tenants"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False, unique=True)
+    contact_email = Column(String, nullable=False)
+    address = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    # Relationships
+    users = relationship("User", back_populates="tenant", cascade="all, delete")
+    companies = relationship("Company", back_populates="tenant", cascade="all, delete")
